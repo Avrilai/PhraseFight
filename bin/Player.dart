@@ -5,6 +5,7 @@ class Player {
   List<Unit> activeUnits = new List();
   String name;
   int points;
+  int setStart;
 
   Player(this.name) {
     points = 0;

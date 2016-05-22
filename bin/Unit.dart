@@ -2,29 +2,30 @@ part of server;
 
 class Unit {
 
-  int _health;
-  int _attack;
-  num xPosition;
+  num _health;
+  num _attack;
+  num xPosition = GameMap.leftCastleXPos;
   int cost;
   bool _alive;
+  bool canMove;
   bool canAttack;
 
   Unit(this._health, this._attack, this.cost) {
-    xPosition = 0;
     _alive = true;
     canAttack = true;
+    canMove = true;
   }
 
-  int takeDamage(int damageTaken) {
+  void takeDamage(num damageTaken) {
     this._health -= damageTaken;
     if(this._health <= 0){
       _alive = false;
     }
   }
 
-  int getAttack() => this._attack;
+  num getAttack() => this._attack;
 
-  int getHealth() => this._health;
+  num getHealth() => this._health;
 
   bool isAlive() => this._alive;
 

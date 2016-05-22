@@ -1,29 +1,40 @@
 part of server;
 
 class GameMap {
-
   Timer timer;
   bool gameStart = false;
-  Player player1;
-  Player player2;
 
   //placeholder
-  static final int mapWidth = 400;
+  static final int leftCastleXPos = 20;
+  static final int rightCastleXPos = 100;
+
+  Player player1;
+  Player player2;
 
   void start() {
     if (timer == null) {
       timer = new Timer.periodic(const Duration(milliseconds: 16), (_) {
         update();
+        debug();
       });
+//      new Timer.periodic(const Duration(seconds: 1), (_) {
+//        debug();
+//      });
     }
   }
 
   void update() {
     for (int i = 0; i < player1.activeUnits.length; i++) {
-      player1.activeUnits[i].xPosition += 0.02;
+      if (player1.activeUnits[i].canMove) {
+        player1.activeUnits[i].xPosition =
+            clamp(player1.activeUnits[i].xPosition + 0.2, leftCastleXPos, rightCastleXPos);
+      }
     }
     for (int i = 0; i < player2.activeUnits.length; i++) {
-      player2.activeUnits[i].xPosition += 0.02;
+      if (player2.activeUnits[i].canMove) {
+        player2.activeUnits[i].xPosition =
+            clamp(player2.activeUnits[i].xPosition + 0.2, leftCastleXPos, rightCastleXPos);
+      }
     }
 
     performLegalInteractions(player1, player2);
@@ -43,6 +54,7 @@ class GameMap {
 
     if (player2 == null) {
       player2 = new Player(name);
+      start();
       return true;
     }
 
@@ -51,43 +63,60 @@ class GameMap {
 
   //units attack each other
   void unitCollision(Unit unitOne, Unit unitTwo) {
-    if (unitTwo.canAttack) {
+    unitOne.canMove = false;
+    unitTwo.canMove = false;
+
+    if (unitTwo.canAttack && unitOne.isAlive()) {
       unitOne.takeDamage(unitTwo.getAttack());
     }
-    if (unitOne.canAttack) {
+    if (unitOne.canAttack && unitTwo.isAlive()) {
       unitTwo.takeDamage(unitOne.getAttack());
     }
   }
 
   bool comparePositions(Unit unitOne, Unit unitTwo) {
-    return unitOne.xPosition.toInt() == unitTwo.xPosition.toInt();
+    return rightCastleXPos == unitOne.xPosition.toInt() + unitTwo.xPosition.toInt();
   }
 
-  void performLegalInteractions(Player p1, Player p2) {
+  void performLegalInteractions(Player player1, Player player2) {
     //checks if any two units of opposing sides are colliding
-    for (int i = p1.activeUnits.length - 1; i >= 0; i--) {
-      for (int j = p2.activeUnits.length - 1; j >= 0; j--) {
-        if (comparePositions(p1.activeUnits[i], p2.activeUnits[j])) {
+    for (int i = player1.activeUnits.length - 1; i >= 0; i--) {
+      for (int j = player2.activeUnits.length - 1; j >= 0; j--) {
+        if (comparePositions(player1.activeUnits[i], player2.activeUnits[j])) {
           //the two units attack each other, if any die, they are removed from the player's unitlist
-          unitCollision(p1.activeUnits[i], p2.activeUnits[j]);
-          if (!p1.activeUnits[i].isAlive()) {
-            p1.activeUnits.remove(i);
+          unitCollision(player1.activeUnits[i], player2.activeUnits[j]);
+          if (!player1.activeUnits[i].isAlive()) {
+            player2.activeUnits[j].canMove = true;
           }
-          if (!p2.activeUnits[i].isAlive()) {
-            p2.activeUnits.remove(j);
+          if (!player2.activeUnits[j].isAlive()) {
+            print("derp");
+            player1.activeUnits[i].canMove = true;
           }
         }
       }
     }
-    refreshUnitAttacks(p1);
-    refreshUnitAttacks(p2);
+
+    player1.activeUnits.removeWhere((unit) => !unit.isAlive());
+    player2.activeUnits.removeWhere((unit) => !unit.isAlive());
+
+    refreshUnitAttacks(player1);
+    refreshUnitAttacks(player2);
   }
 
-  void debug(){
-    for (int i = player1.activeUnits.length - 1; i >= 0; i--) {
-      print(player1.activeUnits[i].isAlive());
-      print(player1.activeUnits[i].isAlive());
-      print(player1.activeUnits[i].isAlive());
+  void debug() {
+    debugUnits(player1);
+    debugUnits(player2);
+  }
+
+  void debugUnits(Player player) {
+    List<Unit> activeUnits = player.activeUnits;
+    for (int i = activeUnits.length - 1; i >= 0; i--) {
+      print("Player: ${player.name}");
+      print("Unit is alive: ${activeUnits[i].isAlive()}");
+      print("Unit's attack: ${activeUnits[i].getAttack()}");
+      print("Unit's hp:  ${activeUnits[i].getHealth()}");
+      print(
+          "Unit position: ${getRealPositionX(player.name, activeUnits[i].xPosition)}");
     }
   }
 
@@ -106,4 +135,20 @@ class GameMap {
     castle.takeDamage(unit.getAttack());
   }
 
+  num getRealPositionX(String name, num x) {
+    if (player1.name != name) {
+      return rightCastleXPos - x;
+    }
+    return x;
+  }
+}
+
+num clamp(num val, num left, num right) {
+  if (val < left) {
+    val = left;
+  }
+  if (val > right) {
+    val = right;
+  }
+  return val;
 }

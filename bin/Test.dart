@@ -11,11 +11,13 @@ void main() {
 
   //testing point purchasing system
   g.player1.setPoints(30);
-  print(g.player1.points);
+  g.player2.setPoints(15);
   g.player1.purchaseUnit(new Soldier());
   print(g.player1.points);
-  g.player1.purchaseUnit(new Soldier());
-  print(g.player1.points);
-  g.debug();
+  g.player2.purchaseUnit(new Tank());
+  print(g.player2.points);
+
+  //testing combat
+
 
 }
