@@ -10,7 +10,7 @@ class Player{
   }
 
   Unit spawnUnit(Unit unit){
-    activeUnits.add(spawnUnit);
+    activeUnits.add(unit);
   }
 
 

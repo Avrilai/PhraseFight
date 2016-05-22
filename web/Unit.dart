@@ -11,7 +11,7 @@ class Unit{
     xPosition = 0;
   }
 
-  int damaged(int damageTaken){
+  int takeDamage(int damageTaken){
     this._health -= damageTaken;
   }
 
