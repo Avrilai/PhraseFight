@@ -2,15 +2,20 @@ part of server;
 
 class Castle{
 
-  int _health;
+  num _health;
+  bool destroyed;
 
   Castle() {
     _health = 50;
+    destroyed = false;
   }
 
-  void takeDamage(int damageAmount){
+  void takeDamage(num damageAmount){
     _health -= damageAmount;
+    if(_health <= 0){
+      destroyed = true;
+    }
   }
 
-  int getHealth() => _health;
+  num getHealth() => _health;
 }

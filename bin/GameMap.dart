@@ -15,29 +15,44 @@ class GameMap {
     if (timer == null) {
       timer = new Timer.periodic(const Duration(milliseconds: 16), (_) {
         update();
-        debug();
-      });
-//      new Timer.periodic(const Duration(seconds: 1), (_) {
 //        debug();
-//      });
+      });
+      new Timer.periodic(const Duration(seconds: 1), (_) {
+        debug();
+        debugCastle();
+      });
     }
   }
 
   void update() {
-    for (int i = 0; i < player1.activeUnits.length; i++) {
-      if (player1.activeUnits[i].canMove) {
-        player1.activeUnits[i].xPosition =
-            clamp(player1.activeUnits[i].xPosition + 0.2, leftCastleXPos, rightCastleXPos);
-      }
-    }
-    for (int i = 0; i < player2.activeUnits.length; i++) {
-      if (player2.activeUnits[i].canMove) {
-        player2.activeUnits[i].xPosition =
-            clamp(player2.activeUnits[i].xPosition + 0.2, leftCastleXPos, rightCastleXPos);
-      }
+    updateUnits(player1);
+    updateUnits(player2);
+    updateSpells(player1);
+    updateSpells(player2);
+    performSpellInteractions();
+    performUnitToCastleInteractions();
+    performUnitInteractions(player1, player2);
+
+    if(player1.castle.destroyed || player2.castle.destroyed){
+      stop();
     }
 
-    performLegalInteractions(player1, player2);
+  }
+
+  void updateUnits(Player player) {
+    for (int i = 0; i < player.activeUnits.length; i++) {
+      player.activeUnits[i].xPosition =
+          clamp(player.activeUnits[i].xPosition + 0.2, leftCastleXPos,
+              rightCastleXPos);
+    }
+  }
+
+  void updateSpells(Player player) {
+    for (int i = 0; i < player.activeSpells.length; i++) {
+      player.activeSpells[i].xPosition =
+          clamp(player.activeSpells[i].xPosition + 0.4, leftCastleXPos,
+              rightCastleXPos);
+    }
   }
 
   void stop() {
@@ -75,10 +90,32 @@ class GameMap {
   }
 
   bool comparePositions(Unit unitOne, Unit unitTwo) {
-    return rightCastleXPos == unitOne.xPosition.toInt() + unitTwo.xPosition.toInt();
+    return rightCastleXPos ==
+        unitOne.xPosition.toInt() + unitTwo.xPosition.toInt();
   }
 
-  void performLegalInteractions(Player player1, Player player2) {
+  void performSpellInteractions() {
+    for (int i = 0; i < player1.activeSpells.length; i++) {
+      if (player1.activeSpells[i].xPosition.toInt() ==
+          rightCastleXPos.toInt()) {
+        player2.castle.takeDamage(player1.activeSpells[i].getDamage());
+        player1.activeSpells[i].complete();
+      }
+    }
+    for (int i = 0; i < player2.activeSpells.length; i++) {
+      if (getRealPositionX(
+          player2.name, player2.activeSpells[i].xPosition.toInt()) ==
+          leftCastleXPos.toInt()) {
+        player1.castle.takeDamage(player2.activeSpells[i].getDamage());
+        player1.activeSpells[i].complete();
+      }
+    }
+
+    player1.activeSpells.removeWhere((spell) => spell.isComplete());
+    player2.activeSpells.removeWhere((spell) => spell.isComplete());
+  }
+
+  void performUnitInteractions(Player player1, Player player2) {
     //checks if any two units of opposing sides are colliding
     for (int i = player1.activeUnits.length - 1; i >= 0; i--) {
       for (int j = player2.activeUnits.length - 1; j >= 0; j--) {
@@ -103,6 +140,22 @@ class GameMap {
     refreshUnitAttacks(player2);
   }
 
+  void performUnitToCastleInteractions() {
+    for (int i = 0; i < player1.activeUnits.length; i++) {
+      if (player1.activeUnits[i].xPosition.toInt() == rightCastleXPos.toInt()) {
+        player2.castle.takeDamage(player1.activeUnits[i].getAttack());
+      }
+    }
+    for (int i = 0; i < player2.activeSpells.length; i++) {
+      if (getRealPositionX(
+          player2.name, player2.activeUnits[i].xPosition.toInt()) ==
+          leftCastleXPos.toInt()) {
+        player1.castle.takeDamage(player2.activeUnits[i].getAttack());
+      }
+    }
+  }
+
+
   void debug() {
     debugUnits(player1);
     debugUnits(player2);
@@ -116,8 +169,14 @@ class GameMap {
       print("Unit's attack: ${activeUnits[i].getAttack()}");
       print("Unit's hp:  ${activeUnits[i].getHealth()}");
       print(
-          "Unit position: ${getRealPositionX(player.name, activeUnits[i].xPosition)}");
+          "Unit position: ${getRealPositionX(
+              player.name, activeUnits[i].xPosition)}");
     }
+  }
+
+  void debugCastle(){
+    print("Player 1 Castle Health: ${player1.castle.getHealth()}");
+    print("Player 2 Castle Health: ${player2.castle.getHealth()}");
   }
 
   //enables units to attack after every loop (they're able to attack once per iteration)
