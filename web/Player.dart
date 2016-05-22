@@ -3,9 +3,9 @@ part of game;
 class Player{
 
   List<Unit> activeUnits = new List();
+  String name;
 
-
-  Player(){
+  Player(this.name){
 
   }
 

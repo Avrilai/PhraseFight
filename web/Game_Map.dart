@@ -2,10 +2,28 @@ part of game;
 
 class Game_Map {
 
+  bool gameStart = false;
+  Player player1;
+  Player player2;
+
   //placeholder
   static final int mapWidth = 400;
 
   void main() {
+  }
+
+  bool addPlayer(String name) {
+    if (player1 != null) {
+      player1 = new Player(name);
+      return true;
+    }
+
+    if (player2 != null) {
+      player2 = new Player(name);
+      return true;
+    }
+
+    return false;
   }
 
   void unitCollision(Unit unitOne, Unit unitTwo) {
@@ -27,5 +45,12 @@ class Game_Map {
     }
   }
 
+  void spellDamageToCastle(Castle castle, Spell spell){
+    castle.takeDamage(spell.getDamage());
+  }
+
+  void unitDamageToCastle(Castle castle, Unit unit){
+    castle.takeDamage(unit.getAttack());
+  }
 
 }
