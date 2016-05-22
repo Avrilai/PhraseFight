@@ -10,7 +10,7 @@ class Player {
     points = 0;
   }
 
-  Unit spawnUnit(Unit unit) {
+  Unit purchaseUnit(Unit unit) {
     if (unit.cost <= points) {
       points -= unit.cost;
       activeUnits.add(unit);
