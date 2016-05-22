@@ -1,4 +1,4 @@
-part of game;
+part of server;
 
 class TextObject{
 
