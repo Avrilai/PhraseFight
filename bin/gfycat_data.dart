@@ -1,4 +1,4 @@
-part of game;
+part of server;
 
 class GfycatData {
   List _animalsList, _adjectivesList;

@@ -76,3 +76,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.xml
+.idea/libraries/Dart_Packages.xml
+.idea/workspace.xml
+.idea/libraries/Dart_Packages.xml
