@@ -13,12 +13,12 @@ class GameMap {
   }
 
   bool addPlayer(String name) {
-    if (player1 != null) {
+    if (player1 == null) {
       player1 = new Player(name);
       return true;
     }
 
-    if (player2 != null) {
+    if (player2 == null) {
       player2 = new Player(name);
       return true;
     }

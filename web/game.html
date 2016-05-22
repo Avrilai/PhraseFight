@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>memes</title>
+    <script src="http://cloud.github.com/downloads/processing-js/processing-js/processing-1.4.1.min.js"></script>
+    <script type="text/processing" data-processing-target="mycanvas">
+var castle1;
+var castle2;
+var healthBar1;
+var healthBar2;
+var spell1;
+
+void setup(){
+size(1420,600);
+background(65,195,235);
+castle1 = new Castle(100,300);
+castle2 = new Castle(1000,300);
+healthBar1 = new HealthBar(100, 400);
+healthBar2 = new HealthBar(1000, 400);
+spell1 = new Spell(100, 350, 1);
+}
+
+void draw(){
+background(65,195,235);
+castle1.drawCastle();
+castle2.drawCastle();
+healthBar1.drawBar();
+healthBar1.updateHealth();
+healthBar2.drawBar();
+healthBar2.updateHealth();
+spell1.drawSpell();
+spell1.moveSpell();
+}
+class HealthBar{
+var xPos;
+var yPos;
+var life;
+HealthBar(x, y){
+xPos = x;
+yPos = y;
+life = 180;
+}
+void drawBar(){
+noStroke();
+fill(0);
+rect(xPos, yPos, 200, 40)
+fill(255, 0, 0);
+rect(xPos + 10, yPos + 10, life , 20);
+}
+void updateHealth(){
+if(mousePressed && life >= 0){
+life -= 5;
+}
+}
+}
+class Castle {
+var xPos;
+var yPos;
+
+Castle(x, y){
+xPos = x;
+yPos = y;
+}
+void drawCastle(){
+noStroke();
+fill(255, 255, 255);
+rect(xPos, yPos, 200, 100);
+rect(xPos, yPos - 50, 40, 50);
+rect(xPos + 80, yPos - 50, 40, 50);
+rect(xPos + 160, yPos - 50, 40, 50);
+}
+}
+class Spell{
+var xPos;
+var yPos;
+var type;
+var r;
+var g;
+var b;
+var move;
+Spell(x, y, t){
+xPos = x;
+yPos = y;
+type =  t;
+move = 0;
+if(t == 1){
+r = 155;
+g = 81;
+b = 229;
+}
+else if(t == 2){
+r = 235;
+g = 34;
+b = 34;
+}
+else{
+r = 0;
+g = 0;
+b = 0;
+}
+}
+void moveSpell(){
+if(xPos < 1420){
+move += 5;
+}
+}
+void drawSpell(){
+noStroke();
+fill(r, g, b);
+ellipse(xPos + move, yPos, 50, 50);
+}
+}
+</script>
+</head>
+<body>
+<canvas id="mycanvas"></canvas>
+</body>
+</html>
