@@ -12,7 +12,6 @@ part 'GameMap.dart';
 part 'Spell.dart';
 part 'Unit.dart';
 part 'Castle.dart';
-part 'Tank.dart';
 
 Map gamesList = <String, GameMap>{};
 main() async {
