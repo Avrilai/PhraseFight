@@ -6,9 +6,11 @@ class Unit{
   int _attack;
   int xPosition;
   int cost;
+  bool _alive;
 
   Unit(this._health, this._attack, this.cost){
     xPosition = 0;
+    _alive = true;
   }
 
   int takeDamage(int damageTaken){
@@ -17,5 +19,6 @@ class Unit{
 
   int getAttack() => this._attack;
   int getHealth() => this._health;
+  bool isAlive() => this._alive;
 
 }
