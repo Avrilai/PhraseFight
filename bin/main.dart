@@ -11,8 +11,10 @@ import 'package:force/force_browser.dart';
 part 'Player.dart';
 part 'Soldier.dart';
 part 'TextObject.dart';
-part 'Unit.dart';
 part 'Game_Map.dart';
+part 'Spell.dart';
+part 'Unit.dart';
+part 'Castle.dart';
 
 String name, matchId;
 ForceClient fc;
