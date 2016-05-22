@@ -1,6 +1,6 @@
 part of server;
 
-class Game_Map {
+class GameMap {
 
   bool gameStart = false;
   Player player1;

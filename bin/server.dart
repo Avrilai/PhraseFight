@@ -4,12 +4,15 @@ import 'package:force/force_serverside.dart';
 import 'dart:math';
 
 part 'gfycat_data.dart';
+part 'Player.dart';
+part 'Soldier.dart';
+part 'TextObject.dart';
+part 'Game_Map.dart';
+part 'Spell.dart';
+part 'Unit.dart';
+part 'Castle.dart';
 
-class Game {
-
-}
-
-Map gamesList = <String, Game>{};
+Map gamesList = <String, GameMap>{};
 main() async {
   ForceServer fs = new ForceServer(
       host: '127.0.0.1',
