@@ -1,0 +1,53 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+@import url(https://fonts.googleapis.com/css?family=Orbitron:400,900);
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+#mycanvas {
+    border: 1px solid;
+    visibility: hidden;
+    padding: 0;
+    margin: auto;
+    display: block;
+    position: relative;
+    z-index: 0;
+}
+
+#login {
+    width: 600px;
+}
+
+textarea{
+    height: 200px;
+    font-size: 25pt;
+    visibility: hidden;
+    position: absolute;
+    bottom: 0;
+}
+h1{
+    color: green;
+    font-size: 50px;
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+}
+h1:hover{
+    color: red;
+}
+
+#phrase-holder {
+    margin: auto;
+    margin-top: -450px;
+    position: relative;
+    width: 1000px;
+    height: 100px;
+    text-align: center;
+    z-index: 1;
+    visibility: hidden;
+}
